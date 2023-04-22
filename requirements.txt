@@ -1,3 +1,4 @@
 streamlit
+scipy
 eli5
 spacy
