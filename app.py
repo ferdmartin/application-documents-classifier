@@ -113,7 +113,8 @@ def main():
             if st.button("Output Explanation"):
                 explainer = TextExplainer(sampler=MaskingTextSampler())
                 explainer.fit(text, model.predict_proba)
-                st.write(explainer.show_prediction(target_names=["Human", "AI"]).data, unsafe_allow_html=True)
+                
+                st.write(explainer.show_prediction(target_names=["Human", "AI"])._repr_html_(), unsafe_allow_html=True)
             
 if __name__ == "__main__":
     main()
