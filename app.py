@@ -116,7 +116,7 @@ def main():
             explainer.fit(text, model.predict_proba)
             
             html = explainer.explain_prediction(target_names=["Human", "AI"])._repr_html_()
-            st.write(html)
+            st.write(html, unsafe_allow_html=True)
             #st.components.v1.html(html)
 
             #st.write(explainer.show_prediction(target_names=["Human", "AI"])._repr_html_(), unsafe_allow_html=True)
