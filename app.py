@@ -92,7 +92,7 @@ def main():
             # Simulate a long-running process
             for i in range(100):
                 # Update the progress bar every 0.1 seconds
-                time.sleep(0.05)
+                time.sleep(0.02)
                 progress_bar.progress(i + 1)
                 
                 if i % 2 == 0:
@@ -110,6 +110,8 @@ def main():
             # Store the result in session state
             st.session_state["prediction"] = prediction
             st.session_state["text"] = text
+            if option in (["Logistic Regression", "Naive Bayes"]):
+                st.session_state["sklearn"] = True
             
             # Print result
             st.write(f"<span style='font-size: 24px;'>I think this text is: {prediction}</span>", 
@@ -120,15 +122,14 @@ def main():
         st.write(f"<span style='font-size: 24px;'>I think this text is: {st.session_state['prediction']}</span>", 
                 unsafe_allow_html=True)
 
-    if st.button("Output Explanation"):
+    if st.button("Model Explanation"):
         # Check if there's text in the session state
-        if "text" in st.session_state:
+        if "text" and "sklearn" in st.session_state:
             with st.spinner('Wait for it...'):
                 explainer = TextExplainer(sampler=MaskingTextSampler())
                 explainer.fit(st.session_state["text"], model.predict_proba)
-
-                st.components.v1.html(eli5.format_as_html(explainer.explain_prediction(target_names=["Human", "AI"]))
-                , height=500,scrolling = True)
+                # Render HTML
+                st.components.v1.html(eli5.format_as_html(explainer.explain_prediction(target_names=["Human", "AI"])), height=500,scrolling = True)
         else:
             st.error("Please enter some text and click 'Let's check!' before requesting an explanation.")
             
