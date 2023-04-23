@@ -114,7 +114,8 @@ def main():
             explainer = TextExplainer(sampler=MaskingTextSampler())
             explainer.fit(text, model.predict_proba)
             
-            st.components.v1.html(explainer.show_prediction(target_names=["Human", "AI"])._repr_html_())
+            html = explainer.show_prediction(target_names=["Human", "AI"])._repr_html_()
+            st.components.v1.html(html)
 
             #st.write(explainer.show_prediction(target_names=["Human", "AI"])._repr_html_(), unsafe_allow_html=True)
             
