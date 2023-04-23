@@ -110,11 +110,11 @@ def main():
             st.write(f"<span style='font-size: 24px;'>I think this text is: {prediction}</span>", 
                     unsafe_allow_html=True)
             
-            if st.button("Output Explanation"):
-                explainer = TextExplainer(sampler=MaskingTextSampler())
-                explainer.fit(text, model.predict_proba)
-                
-                st.write(explainer.show_prediction(target_names=["Human", "AI"])._repr_html_(), unsafe_allow_html=True)
+            #if st.button("Output Explanation"):
+            explainer = TextExplainer(sampler=MaskingTextSampler())
+            explainer.fit(text, model.predict_proba)
+            
+            st.write(explainer.show_prediction(target_names=["Human", "AI"])._repr_html_(), unsafe_allow_html=True)
             
 if __name__ == "__main__":
     main()
