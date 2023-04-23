@@ -11,6 +11,7 @@ def main():
     import re
     from eli5.lime import TextExplainer
     from eli5.lime.samplers import MaskingTextSampler
+    import eli5
 
     # Initialize Spacy
     nlp = spacy.load("en_core_web_sm")
@@ -114,7 +115,7 @@ def main():
             explainer = TextExplainer(sampler=MaskingTextSampler())
             explainer.fit(text, model.predict_proba)
             
-            html = explainer.show_prediction(target_names=["Human", "AI"]).data
+            html = explainer.explain_prediction(target_names=["Human", "AI"])._repr_html_()
             st.write(html)
             #st.components.v1.html(html)
 
