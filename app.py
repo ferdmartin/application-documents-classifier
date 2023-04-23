@@ -9,8 +9,8 @@ def main():
     import time
     import spacy
     import re
-    # from eli5.lime import TextExplainer
-    # from eli5.lime.samplers import MaskingTextSampler
+    from eli5.lime import TextExplainer
+    from eli5.lime.samplers import MaskingTextSampler
 
     # Initialize Spacy
     nlp = spacy.load("en_core_web_sm")
@@ -110,10 +110,10 @@ def main():
             st.write(f"<span style='font-size: 24px;'>I think this text is: {prediction}</span>", 
                     unsafe_allow_html=True)
             
-            # if st.button("Output Explanation"):
-            #     explainer = TextExplainer(sampler=MaskingTextSampler())
-            #     explainer.fit(text, model.predict_proba)
-            #     st.write(explainer.show_prediction(target_names=["Human", "AI"]).data, unsafe_allow_html=True)
+            if st.button("Output Explanation"):
+                explainer = TextExplainer(sampler=MaskingTextSampler())
+                explainer.fit(text, model.predict_proba)
+                st.write(explainer.show_prediction(target_names=["Human", "AI"]).data, unsafe_allow_html=True)
             
 if __name__ == "__main__":
     main()
