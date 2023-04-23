@@ -123,11 +123,12 @@ def main():
     if st.button("Output Explanation"):
         # Check if there's text in the session state
         if "text" in st.session_state:
-            explainer = TextExplainer(sampler=MaskingTextSampler())
-            explainer.fit(st.session_state["text"], model.predict_proba)
+            with st.spinner('Wait for it...'):
+                explainer = TextExplainer(sampler=MaskingTextSampler())
+                explainer.fit(st.session_state["text"], model.predict_proba)
 
-            st.components.v1.html(eli5.format_as_html(explainer.explain_prediction(target_names=["Human", "AI"]))
-            , height=500,scrolling = True)
+                st.components.v1.html(eli5.format_as_html(explainer.explain_prediction(target_names=["Human", "AI"]))
+                , height=500,scrolling = True)
         else:
             st.error("Please enter some text and click 'Let's check!' before requesting an explanation.")
             
