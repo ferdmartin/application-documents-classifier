@@ -115,7 +115,7 @@ def main():
             explainer = TextExplainer(sampler=MaskingTextSampler())
             explainer.fit(text, model.predict_proba)
             
-            html = explainer.explain_prediction(target_names=["Human", "AI"])._repr_html_()
+            html = eli5.format_as_html(explainer.explain_prediction(target_names=["Human", "AI"]))
             #st.write(html, unsafe_allow_html=True)
             st.components.v1.html(html)
 
