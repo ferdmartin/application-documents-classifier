@@ -111,12 +111,12 @@ def main():
             st.write(f"<span style='font-size: 24px;'>I think this text is: {prediction}</span>", 
                     unsafe_allow_html=True)
             
-            if st.button("Output Explanation"):
-                explainer = TextExplainer(sampler=MaskingTextSampler())
-                explainer.fit(text, model.predict_proba)
+#            if st.button("Output Explanation"):
+            explainer = TextExplainer(sampler=MaskingTextSampler())
+            explainer.fit(text, model.predict_proba)
 
-                st.components.v1.html(eli5.format_as_html(explainer.explain_prediction(target_names=["Human", "AI"]))
-                , scrolling = True)
+            st.components.v1.html(eli5.format_as_html(explainer.explain_prediction(target_names=["Human", "AI"]))
+            , scrolling = True)
                         
             
             
