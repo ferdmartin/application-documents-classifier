@@ -70,13 +70,13 @@ def main():
     text = st.text_area("Enter a statement of intent:")
 
     # Hide footer "made with streamlit"
-    hide_st_style = """
-            <style>
-            footer {visibility: hidden;}
-            header {visibility: hidden;}
-            </style>
-            """
-    st.markdown(hide_st_style, unsafe_allow_html=True)
+    # hide_st_style = """
+    #         <style>
+    #         footer {visibility: hidden;}
+    #         header {visibility: hidden;}
+    #         </style>
+    #         """
+    # st.markdown(hide_st_style, unsafe_allow_html=True)
 
     # Use model
     if st.button("Let's check!"):
@@ -117,9 +117,8 @@ def main():
             
             html = eli5.format_as_html(explainer.explain_prediction(target_names=["Human", "AI"]))
             #st.write(html, unsafe_allow_html=True)
-            st.components.v1.html(html, width = 800, height = 2000, scrolling = True)
-
-            #st.write(explainer.show_prediction(target_names=["Human", "AI"])._repr_html_(), unsafe_allow_html=True)
+            # st.components.v1.html(html, width = 800, height = 2000, scrolling = True)
+            st.markdown(html, unsafe_allow_html=True)
             
 if __name__ == "__main__":
     main()
