@@ -115,10 +115,10 @@ def main():
             explainer = TextExplainer(sampler=MaskingTextSampler())
             explainer.fit(text, model.predict_proba)
             
-            html = eli5.format_as_html(explainer.explain_prediction(target_names=["Human", "AI"]))
+            html = explainer.explain_prediction(target_names=["Human", "AI"])._repr_html_()
             #st.write(html, unsafe_allow_html=True)
-            # st.components.v1.html(html, width = 800, height = 2000, scrolling = True)
-            st.markdown(html, unsafe_allow_html=True)
+            st.components.v1.html(html, width = 800, height = 2000, scrolling = True)
+            #st.markdown(html, unsafe_allow_html=True)
             
 if __name__ == "__main__":
     main()
