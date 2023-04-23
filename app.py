@@ -69,14 +69,14 @@ def main():
     
     text = st.text_area("Enter a statement of intent:")
 
-    # Hide footer "made with streamlit"
-    # hide_st_style = """
-    #         <style>
-    #         footer {visibility: hidden;}
-    #         header {visibility: hidden;}
-    #         </style>
-    #         """
-    # st.markdown(hide_st_style, unsafe_allow_html=True)
+    Hide footer "made with streamlit"
+    hide_st_style = """
+            <style>
+            footer {visibility: hidden;}
+            header {visibility: hidden;}
+            </style>
+            """
+    st.markdown(hide_st_style, unsafe_allow_html=True)
 
     # Use model
     if st.button("Let's check!"):
@@ -116,7 +116,7 @@ def main():
             explainer.fit(text, model.predict_proba)
 
             st.components.v1.html(eli5.format_as_html(explainer.explain_prediction(target_names=["Human", "AI"]))
-            , scrolling = True)
+            , height=500,scrolling = True)
                         
             
             
