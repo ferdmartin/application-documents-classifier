@@ -67,7 +67,7 @@ def main():
     # Load the selected trained model
     model = joblib.load(models_available[option])
     
-    text = st.text_area("Enter a statement of intent:")
+    text = st.text_area("Enter either a statement of intent or a letter of recommendation:")
 
     #Hide footer "made with streamlit"
     hide_st_style = """
