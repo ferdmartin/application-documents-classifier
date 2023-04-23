@@ -79,7 +79,7 @@ def main():
     st.markdown(hide_st_style, unsafe_allow_html=True)
 
     # Use model
-    if st.button("Let's check!"):
+    if st.button("Let's check this text!"):
         if text.strip() == "":
             st.error("Please enter some text")
         else:
@@ -91,8 +91,8 @@ def main():
 
             # Simulate a long-running process
             for i in range(100):
-                # Update the progress bar every 0.1 seconds
-                time.sleep(0.02)
+                # Update the progress bar every 0.02 seconds
+                time.sleep(0.05)
                 progress_bar.progress(i + 1)
                 
                 if i % 2 == 0:
