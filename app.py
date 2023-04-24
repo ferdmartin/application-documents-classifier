@@ -10,6 +10,7 @@ def main():
     import spacy
     import re
     from transformers import AutoModelForSequenceClassification, AutoTokenizer
+    import torch
     from eli5.lime import TextExplainer
     from eli5.lime.samplers import MaskingTextSampler
     import eli5
