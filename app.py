@@ -181,7 +181,7 @@ def main():
                     explainer.fit(st.session_state["text"], model.predict_proba)
                     html = eli5.format_as_html(explainer.explain_prediction(target_names=["Human", "AI"]))
             else:
-                with st.spinner('Wait for it... (If you are using any of the BERT-based models, it takes around 3-6 minutes to complete)'):
+                with st.spinner('Wait for it 💭... (If you are using any of the BERT-based models, it takes around 3-6 minutes to complete)'):
                 # TORCH EXPLAINER PRED FUNC (USES logits)
                     def f(x):
                         tv = torch.tensor([tokenizer.encode(v, padding='max_length', max_length=512, truncation=True) for v in x])#.cuda()
