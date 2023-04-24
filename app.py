@@ -123,35 +123,35 @@ def main():
         if text.strip() == "":
             st.error("Please enter some text")
         else:
-            # Add a progress bar
-            progress_bar = st.progress(0)
+            # # Add a progress bar
+            # progress_bar = st.progress(0)
 
-            # Add a placeholder for the progress message
-            status_text = st.empty()
+            # # Add a placeholder for the progress message
+            # status_text = st.empty()
 
-            # Simulate a long-running process
-            for i in range(100):
-                # Update the progress bar every 0.02 seconds
-                time.sleep(0.05)
-                progress_bar.progress(i + 1)
+            # # Simulate a long-running process
+            # for i in range(100):
+            #     # Update the progress bar every 0.02 seconds
+            #     time.sleep(0.05)
+            #     progress_bar.progress(i + 1)
                 
-                if i % 2 == 0:
-                    magic = "✨"
+            #     if i % 2 == 0:
+            #         magic = "✨"
+            #     else:
+            #         magic = ""
+            #     # Update the progress message
+            #     status_text.write(f"Work in progress {i + 1}%... Wait for the magic 🪄🔮{magic}")
+            # # Clear the progress bar and status message
+            # progress_bar.empty()
+            # status_text.empty()
+            with st.spinner("Wait for the magic 🪄🔮"):
+                # Use model
+                if option in ("Naive Bayes", "Logistic Regression"):
+                    prediction = nb_lr(model, text)
+                    st.session_state["sklearn"] = True
                 else:
-                    magic = ""
-                # Update the progress message
-                status_text.write(f"Work in progress {i + 1}%... Wait for the magic 🪄🔮{magic}")
-            # Clear the progress bar and status message
-            progress_bar.empty()
-            status_text.empty()
-
-            # Use model
-            if option in ("Naive Bayes", "Logistic Regression"):
-                prediction = nb_lr(model, text)
-                st.session_state["sklearn"] = True
-            else:
-                prediction = torch_pred(tokenizer, model, text)
-                st.session_state["torch"] = True
+                    prediction = torch_pred(tokenizer, model, text)
+                    st.session_state["torch"] = True
             
             prediction = pred_str(prediction)
             # Store the result in session state
@@ -162,6 +162,7 @@ def main():
             # Print result
             st.write(f"<span style='font-size: 24px;'>I think this text is: {prediction}</span>", 
                     unsafe_allow_html=True)
+            st.balloons()
 
     elif "prediction" in st.session_state:
         # Display the stored result if available
