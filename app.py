@@ -55,8 +55,11 @@ def main():
             return "Generated with AI 🦾🤖"
 
     # Streamlit app
+
     models_available = {"Logistic Regression":"models/baseline_model_lr2.joblib", 
-                        "Naive Bayes": "models/baseline_model_nb2.joblib"}
+                        "Naive Bayes": "models/baseline_model_nb2.joblib",
+                        "DistilBERT-based model (BERT light)": "ferdmartin/HF_DistilBertBasedModelAppDocs",
+                        "BERT-based model": "ferdmartin/HF_BertBasedModelAppDocs"}
 
     st.set_page_config(layout="wide")
     st.title("Academic Application Document Classifier")
