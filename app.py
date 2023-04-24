@@ -14,6 +14,7 @@ def main():
     from eli5.lime import TextExplainer
     from eli5.lime.samplers import MaskingTextSampler
     import eli5
+    import shap
 
     # Initialize Spacy
     nlp = spacy.load("en_core_web_sm")
@@ -70,7 +71,7 @@ def main():
             return "Human-made 🤷‍♂️🤷‍♀️"
         else:
             return "Generated with AI 🦾🤖"
-
+    
     @st.cache(allow_output_mutation=True, suppress_st_warning=True)
     def load_tokenizer(option):
         if option == "BERT-based model":
@@ -162,7 +163,6 @@ def main():
             # Print result
             st.write(f"<span style='font-size: 24px;'>I think this text is: {prediction}</span>", 
                     unsafe_allow_html=True)
-            st.balloons()
 
     elif "prediction" in st.session_state:
         # Display the stored result if available
@@ -171,13 +171,26 @@ def main():
 
     if st.button("Model Explanation"):
         # Check if there's text in the session state
-        if "text" and "sklearn" in st.session_state:
-            with st.spinner('Wait for it...'):
-                explainer = TextExplainer(sampler=MaskingTextSampler())
-                explainer.fit(st.session_state["text"], model.predict_proba)
-                html = eli5.format_as_html(explainer.explain_prediction(target_names=["Human", "AI"]))
+        if "text" in st.session_state:
+            with st.spinner('Wait for it... (If you are using any of the BERT-based models, it takes around 3-6 minutes to complete)'):
+                if option in ("Naive Bayes", "Logistic Regression"):
+                    explainer = TextExplainer(sampler=MaskingTextSampler())
+                    explainer.fit(st.session_state["text"], model.predict_proba)
+                    html = eli5.format_as_html(explainer.explain_prediction(target_names=["Human", "AI"]))
+                else:
+                    # TORCH EXPLAINER PRED FUNC (USES logits)
+                    def f(x):
+                        tv = torch.tensor([tokenizer.encode(v, padding='max_length', max_length=512, truncation=True) for v in x])#.cuda()
+                        outputs = huggingface_model(tv)[0].detach().cpu().numpy()
+                        scores = (np.exp(outputs).T / np.exp(outputs).sum(-1)).T
+                        val = scipy.special.logit(scores[:,1]) # use one vs rest logit units
+                        return val
+                    # build an explainer using a token masker
+                    explainer = shap.Explainer(f, tokenizer)
+                    shap_values = explainer([st.session_state["text"]], fixed_context=1)
+                    html = shap.plots.text(shap_values, display=False)
                 # Render HTML
-                st.components.v1.html(html, height=500,scrolling = True)
+                st.components.v1.html(html, height=500, scrolling = True)
         else:
             st.error("Please enter some text and click 'Let's check!' before requesting an explanation.")
             
