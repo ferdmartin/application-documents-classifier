@@ -196,7 +196,7 @@ def main():
             # Render HTML
             st.components.v1.html(html, height=500, scrolling = True)
         else:
-            st.error("Please enter some text and click 'Let's check!' before requesting an explanation.")
+            st.error("Please enter some text and click 'Let's check!' before requesting an explanation.") \
             
 if __name__ == "__main__":
     main()
