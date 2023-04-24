@@ -63,8 +63,9 @@ def main():
             _, prediction = torch.max(logits, 1)
             prediction = prediction.item()
             return prediction
-        
-        # Map the predicted class to string output
+
+    def pred_str(prediction):
+    # Map the predicted class to string output
         if prediction == 0:
             return "Human-made 🤷‍♂️🤷‍♀️"
         else:
@@ -151,6 +152,8 @@ def main():
             else:
                 prediction = torch_pred(tokenizer, model, text)
                 st.session_state["torch"] = True
+            
+            prediction = pred_str(prediction)
             # Store the result in session state
             st.session_state["prediction"] = prediction
             st.session_state["text"] = text
