@@ -2,5 +2,7 @@ streamlit
 scikit-learn==1.0.2
 scipy==1.7.3
 eli5==0.13.0
+torch
+transformers
 spacy
 https://huggingface.co/spacy/en_core_web_sm/resolve/main/en_core_web_sm-any-py3-none-any.whl
