@@ -45,25 +45,24 @@ def main():
                                 translate(str.maketrans('', '', string.punctuation)).strip().lstrip()
 
     # Define the function to classify text
-    def classify_text(model, text):
+    def nb_lr(model, text):
         # Clean and format the input text
         text = format_text(text)
-        
-        # Predict the class of the input text
-        if type(model) == "sklearn.pipeline.Pipeline":
             # Predict using either LR or NB
-            prediction = model.predict([text]).item()
-            st.session_state["sklearn"] = True
-        else:
-            # DL models (BERT/DistilBERT based models)
-            cleaned_text_tokens = tokenizer([text], padding='max_length', max_length=512, truncation=True)
-            with torch.inference_mode():
-                input_ids, att = cleaned_text_tokens["input_ids"], cleaned_text_tokens["attention_mask"]
-                input_ids = torch.tensor(input_ids).to(device)
-                attention_mask = torch.tensor(att).to(device)
-                logits = model(input_ids=input_ids, attention_mask=attention_mask)[0]
-                _, prediction = torch.max(logits, 1)
-                prediction = prediction.item()
+        prediction = model.predict([text]).item()
+        return prediction
+    
+    def torch_pred(tokenizer, model, text):
+        # DL models (BERT/DistilBERT based models)
+        cleaned_text_tokens = tokenizer([text], padding='max_length', max_length=512, truncation=True)
+        with torch.inference_mode():
+            input_ids, att = cleaned_text_tokens["input_ids"], cleaned_text_tokens["attention_mask"]
+            input_ids = torch.tensor(input_ids).to(device)
+            attention_mask = torch.tensor(att).to(device)
+            logits = model(input_ids=input_ids, attention_mask=attention_mask)[0]
+            _, prediction = torch.max(logits, 1)
+            prediction = prediction.item()
+            return prediction
         
         # Map the predicted class to string output
         if prediction == 0:
@@ -146,7 +145,12 @@ def main():
             status_text.empty()
 
             # Use model
-            prediction = classify_text(model, text)
+            if option in ("Naive Bayes", "Logistic Regression"):
+                prediction = nb_lr(model, text)
+                st.session_state["sklearn"] = True
+            else:
+                prediction = torch_pred(tokenizer, model, text)
+                st.session_state["torch"] = True
             # Store the result in session state
             st.session_state["prediction"] = prediction
             st.session_state["text"] = text
