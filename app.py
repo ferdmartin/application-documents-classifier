@@ -4,9 +4,11 @@ def main():
     using a pre-trained model. 
     """
     import streamlit as st
+    import numpy as np
     import joblib
     import string
     import time
+    import scipy
     import spacy
     import re
     from transformers import AutoModelForSequenceClassification, AutoTokenizer

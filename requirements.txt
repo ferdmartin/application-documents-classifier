@@ -2,6 +2,7 @@ streamlit
 scikit-learn==1.0.2
 scipy==1.7.3
 shap
+numpy==1.21.6
 eli5==0.13.0
 torch
 transformers
