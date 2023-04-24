@@ -77,9 +77,9 @@ def main():
     @st.cache(allow_output_mutation=True, suppress_st_warning=True)
     def load_tokenizer(option):
         if option == "BERT-based model":
-            tokenizer = AutoTokenizer.from_pretrained("bert-base-uncased")
+            tokenizer = AutoTokenizer.from_pretrained("bert-base-uncased", padding='max_length', max_length=512, truncation=True)
         else:
-            tokenizer = AutoTokenizer.from_pretrained("distilbert-base-uncased")
+            tokenizer = AutoTokenizer.from_pretrained("distilbert-base-uncased", padding='max_length', max_length=512, truncation=True)
         return tokenizer
 
     @st.cache(allow_output_mutation=True, suppress_st_warning=True)
