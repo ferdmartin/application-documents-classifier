@@ -38,5 +38,5 @@ class MyHFModel_DistilBertBased(PreTrainedModel):
         if attention_mask is None:
             attention_mask = torch.ones(input_shape, device=device)
 
-config = MyConfig(0.55)
+config = MyConfigDistil(0.55)
 HF_DistilBertBasedModelAppDocs = MyHFModel_DistilBertBased(config)
