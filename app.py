@@ -188,7 +188,7 @@ def main():
                 # TORCH EXPLAINER PRED FUNC (USES logits)
                     def f(x):
                         tv = torch.tensor([tokenizer.encode(v, padding='max_length', max_length=512, truncation=True) for v in x])#.cuda()
-                        outputs = model(tv)[0].detach().cpu().numpy()
+                        outputs = model(tv).detach().cpu().numpy()
                         scores = (np.exp(outputs).T / np.exp(outputs).sum(-1)).T
                         val = scipy.special.logit(scores[:,1]) # use one vs rest logit units
                         return val
