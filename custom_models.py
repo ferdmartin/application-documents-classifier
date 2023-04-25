@@ -32,7 +32,7 @@ class MyHFModel_DistilBertBased(PreTrainedModel):
     def __init__(self, config):
         super().__init__(config)
         self.config = config
-        self.model = model
+        self.model = TransformerBasedModelDistilBert()
     def forward(self, input_ids: torch.Tensor, attention_mask: Optional[torch.Tensor] = None):
         input_shape = input_ids.size()
         if attention_mask is None:
