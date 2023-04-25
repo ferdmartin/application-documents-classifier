@@ -3,6 +3,8 @@ from transformers import PreTrainedModel, PretrainedConfig, DistilBertModel
 import torch
 from torch import nn
 
+
+device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 class TransformerBasedModelDistilBert(nn.Module):
     def __init__(self):
         super(TransformerBasedModelDistilBert, self).__init__()
