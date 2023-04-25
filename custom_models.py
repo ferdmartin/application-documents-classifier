@@ -1,5 +1,7 @@
 from typing import Optional
-from transformers import PreTrainedModel, PretrainedConfig
+from transformers import PreTrainedModel, PretrainedConfig, DistilBertModel
+import torch
+from torch import nn
 
 class TransformerBasedModelDistilBert(nn.Module):
     def __init__(self):
