@@ -17,7 +17,7 @@ def main():
     from eli5.lime.samplers import MaskingTextSampler
     import eli5
     import shap
-    from custom_models import HF_DistilBertBasedModelAppDocs
+    from custom_models import HF_DistilBertBasedModelAppDocs, HF_BertBasedModelAppDocs
 
     # Initialize Spacy
     nlp = spacy.load("en_core_web_sm")
@@ -85,8 +85,10 @@ def main():
 
     @st.cache(allow_output_mutation=True, suppress_st_warning=True)
     def load_model(option):
-
-        model = HF_DistilBertBasedModelAppDocs.from_pretrained("ferdmartin/HF_DistilBertBasedModelAppDocs").to(device)
+        if option == "BERT-based model":
+            model = HF_BertBasedModelAppDocs.from_pretrained("ferdmartin/HF_DistilBertBasedModelAppDocs").to(device)
+        else:
+            model = HF_DistilBertBasedModelAppDocs.from_pretrained("ferdmartin/HF_DistilBertBasedModelAppDocs").to(device)
         return model
     
 
@@ -95,7 +97,7 @@ def main():
     models_available = {"Logistic Regression":"models/baseline_model_lr2.joblib", 
                         "Naive Bayes": "models/baseline_model_nb2.joblib",
                         "DistilBERT-based model (BERT light)": "ferdmartin/HF_DistilBertBasedModelAppDocs",
-                        # "BERT-based model": "ferdmartin/HF_BertBasedModelAppDocs"
+                        "BERT-based model": "ferdmartin/HF_BertBasedModelAppDocs"
                         }
 
     st.set_page_config(layout="wide")
