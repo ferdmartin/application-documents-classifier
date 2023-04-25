@@ -84,7 +84,7 @@ def main():
 
     @st.cache(allow_output_mutation=True, suppress_st_warning=True)
     def load_model(option):
-        model = AutoModelForSequenceClassification.from_pretrained(models_available[option])
+        model = AutoModelForSequenceClassification.from_pretrained(models_available[option], trust_remote_code=True)
         return model
     
 
