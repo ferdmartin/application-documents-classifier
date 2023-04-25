@@ -63,7 +63,7 @@ def main():
             input_ids, att = cleaned_text_tokens["input_ids"], cleaned_text_tokens["attention_mask"]
             input_ids = torch.tensor(input_ids).to(device)
             attention_mask = torch.tensor(att).to(device)
-            logits = model(input_ids=input_ids, attention_mask=attention_mask)[0]
+            logits = model(input_ids=input_ids, attention_mask=attention_mask)
             _, prediction = torch.max(logits, 1)
             prediction = prediction.item()
             return prediction
