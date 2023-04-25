@@ -86,7 +86,7 @@ def main():
     @st.cache(allow_output_mutation=True, suppress_st_warning=True)
     def load_model(option):
         if option == "BERT-based model":
-            model = HF_BertBasedModelAppDocs.from_pretrained("ferdmartin/HF_DistilBertBasedModelAppDocs").to(device)
+            model = HF_BertBasedModelAppDocs.from_pretrained("ferdmartin/HF_BertBasedModelAppDocs").to(device)
         else:
             model = HF_DistilBertBasedModelAppDocs.from_pretrained("ferdmartin/HF_DistilBertBasedModelAppDocs").to(device)
         return model
