@@ -52,9 +52,10 @@ def main():
     def nb_lr(model, text):
         # Clean and format the input text
         text = format_text(text)
-            # Predict using either LR or NB
+        # Predict using either LR or NB and get prediction probability
         prediction = model.predict([text]).item()
-        return prediction
+        predict_proba = round(model.predict_proba([text]).squeeze()[prediction].item(),4)
+        return prediction, predict_proba
     
     def torch_pred(tokenizer, model, text):
         # DL models (BERT/DistilBERT based models)
@@ -66,14 +67,15 @@ def main():
             logits = model(input_ids=input_ids, attention_mask=attention_mask)
             _, prediction = torch.max(logits, 1)
             prediction = prediction.item()
-            return prediction
+            predict_proba = round(torch.softmax(logits, 1).cpu().squeeze().tolist()[prediction],4)
+            return prediction, predict_proba
 
     def pred_str(prediction):
     # Map the predicted class to string output
         if prediction == 0:
             return "Human-made 🤷‍♂️🤷‍♀️"
         else:
-            return "Generated with AI 🦾🤖"
+            return "Generated with AI 🦾"
     
     @st.cache(allow_output_mutation=True, suppress_st_warning=True)
     def load_tokenizer(option):
@@ -100,12 +102,16 @@ def main():
                         "BERT-based model": "ferdmartin/HF_BertBasedModelAppDocs"
                         }
 
-    st.set_page_config(layout="wide")
+    st.set_page_config(page_title="AI/Human GradAppDocs", page_icon="🤖", layout="wide")
     st.title("Academic Application Document Classifier")
     st.header("Is it human-made 📝 or Generated with AI 🤖 ?  ")
     
     # Check the model to use
-    option = st.selectbox("Select a model to use:", models_available)
+    def restore_prediction_state():
+        if "prediction" in st.session_state:
+            del st.session_state.prediction
+    option = st.selectbox("Select a model to use:", models_available, on_change=restore_prediction_state)
+    
 
     # Load the selected trained model
     if option in ("BERT-based model", "DistilBERT-based model (BERT light)"):
@@ -125,60 +131,38 @@ def main():
             </style>
             """
     st.markdown(hide_st_style, unsafe_allow_html=True)
-
+    
     # Use model
     if st.button("Let's check this text!"):
         if text.strip() == "":
             st.error("Please enter some text")
         else:
-            # # Add a progress bar
-            # progress_bar = st.progress(0)
-
-            # # Add a placeholder for the progress message
-            # status_text = st.empty()
-
-            # # Simulate a long-running process
-            # for i in range(100):
-            #     # Update the progress bar every 0.02 seconds
-            #     time.sleep(0.05)
-            #     progress_bar.progress(i + 1)
-                
-            #     if i % 2 == 0:
-            #         magic = "✨"
-            #     else:
-            #         magic = ""
-            #     # Update the progress message
-            #     status_text.write(f"Work in progress {i + 1}%... Wait for the magic 🪄🔮{magic}")
-            # # Clear the progress bar and status message
-            # progress_bar.empty()
-            # status_text.empty()
             with st.spinner("Wait for the magic 🪄🔮"):
                 # Use model
                 if option in ("Naive Bayes", "Logistic Regression"):
-                    prediction = nb_lr(model, text)
+                    prediction, predict_proba = nb_lr(model, text)
                     st.session_state["sklearn"] = True
                 else:
-                    prediction = torch_pred(tokenizer, model, text)
+                    prediction, predict_proba = torch_pred(tokenizer, model, text)
                     st.session_state["torch"] = True
-            
-            prediction = pred_str(prediction)
+
             # Store the result in session state
+            st.session_state["color_pred"] = "blue" if prediction == 0 else "red"
+            prediction = pred_str(prediction)
             st.session_state["prediction"] = prediction
+            st.session_state["predict_proba"] = predict_proba
             st.session_state["text"] = text
             
-            
             # Print result
-            st.write(f"<span style='font-size: 24px;'>I think this text is: {prediction}</span>", 
-                    unsafe_allow_html=True)
+            st.markdown(f"I think this text is: **:{st.session_state['color_pred']}[{st.session_state['prediction']}]** (Prediction probability: {st.session_state['predict_proba'] * 100}%)")
 
     elif "prediction" in st.session_state:
-        # Display the stored result if available
-        st.write(f"<span style='font-size: 24px;'>I think this text is: {st.session_state['prediction']}</span>", 
-                unsafe_allow_html=True)
+        # Display the stored result if available        
+        st.markdown(f"I think this text is: **:{st.session_state['color_pred']}[{st.session_state['prediction']}]** (Prediction probability: {st.session_state['predict_proba'] * 100}%)")
 
     if st.button("Model Explanation"):
         # Check if there's text in the session state
-        if "text" in st.session_state:
+        if "text" in st.session_state and "prediction" in st.session_state:
            
             if option in ("Naive Bayes", "Logistic Regression"):
                  with st.spinner('Wait for it 💭...'):
@@ -186,7 +170,7 @@ def main():
                     explainer.fit(st.session_state["text"], model.predict_proba)
                     html = eli5.format_as_html(explainer.explain_prediction(target_names=["Human", "AI"]))
             else:
-                with st.spinner('Wait for it 💭... (If you are using any of the BERT-based models, it takes around 3-6 minutes to complete)'):
+                with st.spinner('Wait for it 💭... BERT-based model explanations take around 4-10 minutes. In case you want to abort, refresh the page.'):
                 # TORCH EXPLAINER PRED FUNC (USES logits)
                     def f(x):
                         tv = torch.tensor([tokenizer.encode(v, padding='max_length', max_length=512, truncation=True) for v in x])#.cuda()
